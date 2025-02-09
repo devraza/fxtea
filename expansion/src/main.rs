@@ -2,7 +2,7 @@ use std::io;
 
 const EXPONENTS: &str = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 
-fn choose(n: u64, r: u64) -> u64 {
+fn choose(n: i64, r: i64) -> i64 {
     if r > n-r {
         return choose(n, n-r);
     }
@@ -52,7 +52,7 @@ fn main() {
             pow_a -= 1;
         }
 
-        expansion.push(format!("{} {}", choose(k as u64, i as u64) * (a.pow(pow_a) * b.pow(pow_b)) as u64, end));
+        expansion.push(format!("{} {}", choose(k as i64, i as i64) * (a.pow(pow_a) * b.pow(pow_b)) as i64, end));
 
         pow_b += 1;
     }
