@@ -19,7 +19,7 @@ fn superscript(n: i64) -> String {
     let mut combined = String::new();
     for c in n.chars() {
         if c == '-' {
-            combined.push_str("-");
+            combined.push('-');
         } else {
             let pos = c.to_digit(10).unwrap();
             combined.push(EXPONENTS.chars().nth(pos as usize).unwrap())
@@ -41,20 +41,17 @@ fn main() {
     let k = nums[2];
 
     let mut pow_a: u32 = k.try_into().unwrap();
-    let mut pow_b: u32 = 0;
 
     let mut expansion: Vec<String> = vec![];
 
     for i in 0..k+1 {
         let mut end = String::new();
-        if pow_b != k as u32 {
+        if i != k {
             end = format!("x{}", superscript(pow_a.into()));
             pow_a -= 1;
         }
 
-        expansion.push(format!("{} {}", choose(k as i64, i as i64) * (a.pow(pow_a) * b.pow(pow_b)) as i64, end));
-
-        pow_b += 1;
+        expansion.push(format!("{} {}", choose(k, i) * (a.pow(pow_a) * b.pow(i as u32)), end));
     }
 
     println!("{}", expansion.join(" + "));
