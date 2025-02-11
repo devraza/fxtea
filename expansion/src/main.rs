@@ -51,7 +51,7 @@ fn main() {
             if pow_a != 1 {
                 end = format!("x{}", superscript(pow_a.into()));
             } else {
-                end = format!("x");
+                end = String::from("x");
             }
         }
 
