@@ -46,12 +46,21 @@ fn main() {
 
     for i in 0..k+1 {
         let mut end = String::new();
+
         if i != k {
-            end = format!("x{}", superscript(pow_a.into()));
-            pow_a -= 1;
+            if pow_a != 1 {
+                end = format!("x{}", superscript(pow_a.into()));
+            } else {
+                end = format!("x");
+            }
         }
 
         expansion.push(format!("{} {}", choose(k, i) * (a.pow(pow_a) * b.pow(i as u32)), end));
+
+        if i != k {
+            pow_a -= 1;
+        }
+
     }
 
     println!("{}", expansion.join(" + "));
