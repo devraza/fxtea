@@ -4,7 +4,17 @@ a, b = input().split(' ')
 
 rate = float(a)
 i = b[0]
-b = int(b[1:])
+
+if 'CR' not in b:
+    b = int(b[1:])
+else:
+    level = float(b[2:])
+    cumulative = 0
+    count = 0
+    while round(cumulative, 4) != 1.:
+        cumulative += math.e**(-1*rate) * (rate**count/math.factorial(count))
+        print(f"{round(cumulative, 4)} {count}")
+        count += 1
 
 sums = 0
 
