@@ -11,9 +11,15 @@ else:
     level = float(b[2:])
     cumulative = 0
     count = 0
+
     while round(cumulative, 4) != 1.:
         cumulative += math.e**(-1*rate) * (rate**count/math.factorial(count))
-        print(f"{round(cumulative, 4)} {count}")
+        value = round(cumulative, 4)
+        if value < 0.01*level or (1-value) < 0.01*level:
+            code = "\x1b[1;31m"
+        else:
+            code = ""
+        print(f"{code}{round(cumulative, 4)}\x1b[0m {count}")
         count += 1
 
 sums = 0
