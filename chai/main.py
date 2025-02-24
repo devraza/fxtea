@@ -1,14 +1,11 @@
 n = int(input())
 
 total = 0
-n_total = 0
 
 for _ in range(n):
-    o = int(input())
-    e = int(input())
+    o = float(input())
+    e = float(input())
 
-    total += (o**2)/e
+    total += ((o - e)**2)/e
 
-    n_total += e
-
-print(round(total-n_total, 4))
+print(round(total, 4))
