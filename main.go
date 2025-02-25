@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	"fxtea/fx"
 )
 
 var (
@@ -74,6 +77,18 @@ func initialModel() model {
 	}
 }
 
+func quadraticModel() model {
+	ti := textinput.New()
+	ti.Focus()
+	ti.CharLimit = 156
+	ti.Width = 20
+
+	return model{
+		textInput: ti,
+		err:       nil,
+	}
+}
+
 func (m model) Init() tea.Cmd {
 	return textinput.Blink
 }
@@ -87,20 +102,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyCtrlC:
 			return m, tea.Quit
 		case tea.KeyEnter:
+			arg := os.Args[1]
 			arguments := strings.Split(m.textInput.Value(), " ")
-			switch arguments[0] {
-			case "enqueue":
-				m.show = false
-				m.queue = enqueue(m.queue, arguments[1])
-			case "dequeue":
-				m.show = false
-				m.queue = dequeue(m.queue)
-			case "check":
-				m.show = true
-				m.status = check(m.queue)
-			default:
-				m.show = true
-				m.status = red.Render("This action is unsupported")
+			if arg == "queue" {
+				switch arguments[0] {
+				case "enqueue":
+					m.show = false
+					m.queue = enqueue(m.queue, arguments[1])
+				case "dequeue":
+					m.show = false
+					m.queue = dequeue(m.queue)
+				case "check":
+					m.show = true
+					m.status = check(m.queue)
+				default:
+					m.show = true
+					m.status = red.Render("This action is unsupported")
+				}
+			} else {
+				var variables []float64
+				for i := range arguments {
+					parsed, _ := strconv.ParseFloat(arguments[i], 64)
+					variables = append([]float64{parsed}, variables...)
+				}
+				m.status = fmt.Sprintf("%v", fx.Quadratic(variables[0], variables[1], variables[2]))
 			}
 		}
 
@@ -114,33 +139,33 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	command_list := fmt.Sprintf(
-		"Valid commands: %s, %s, %s",
-		command.Render(" enqueue "),
-		command.Render(" dequeue "),
-		command.Render(" check "),
-	)
-
 	if m.show {
 		return padding.Render(fmt.Sprintf(
-			"%v\n\n%v\n\n%s",
-			command_list,
+			"%v\n\n%s",
 			m.status,
 			m.textInput.View(),
 		)) + "\n"
 	} else {
 		return padding.Render(fmt.Sprintf(
-			"%v\n\n%v\n\n%s",
-			command_list,
-			list.Render(fmt.Sprintf("%v", m.queue)),
+			"%v\n\n%s",
+			m.status,
 			m.textInput.View(),
 		)) + "\n"
 	}
 }
 
 func main() {
-	p := tea.NewProgram(initialModel())
-	if _, err := p.Run(); err != nil {
-		log.Fatal(err)
+	arg := os.Args[1]
+	switch arg {
+	case "queue":
+		p := tea.NewProgram(initialModel())
+		if _, err := p.Run(); err != nil {
+			log.Fatal(err)
+		}
+	case "quadratic":
+		p := tea.NewProgram(quadraticModel())
+		if _, err := p.Run(); err != nil {
+			log.Fatal(err)
+		}
 	}
 }

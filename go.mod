@@ -1,4 +1,4 @@
-module devraza/queue
+module fxtea
 
 go 1.23.3
 
