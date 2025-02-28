@@ -1,6 +1,6 @@
 # fxtea
 An advanced calculator extended from [devraza](https://git.devraza.giize.com/devraza)'s
-[A-Level Mathematics Utilities](https://git.devraza.giize.com/devraza/omniputation).
+[A-Level utilities](https://git.devraza.giize.com/devraza/omniputation).
 
 Available as a TUI, GUI, and CLI.
 
