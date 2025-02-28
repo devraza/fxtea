@@ -4,10 +4,6 @@ import (
   "math"
 )
 
-func Round(n, nearest float64) float64 {
-  return math.Round(n/nearest) * nearest
-}
-
 func Quadratic(a float64, b float64, c float64) [2]float64 {
   roots := [2]float64{0., 0.}
 

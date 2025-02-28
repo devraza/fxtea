@@ -3,7 +3,12 @@ package fx
 import (
   "fmt"
   "strings"
+  "math"
 )
+
+func Round(n, nearest float64) float64 {
+  return math.Round(n/nearest) * nearest
+}
 
 func FormatFloat(f float64) string {
     s := fmt.Sprintf("%.4f", f)
