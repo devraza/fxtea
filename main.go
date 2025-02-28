@@ -158,7 +158,7 @@ func choicesView(m model) string {
 
 func quadraticView (m model) string {
 	arguments := strings.Split(m.TextInput.Value(), " ")
-  m.TextInput.Placeholder = "a, b, c"
+  m.TextInput.Placeholder = "a b c"
 
   var result string
 
