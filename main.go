@@ -97,6 +97,8 @@ func (m model) View() string {
 		switch m.Choice {
 		case 0:
 			s = quadraticView(m)
+		case 2:
+			s = chaiView(m)
 		default:
 			s = quadraticView(m)
 		}
@@ -174,6 +176,34 @@ func quadraticView(m model) string {
 			"The roots are %v and %v",
 			keywordStyle.Render(fx.FormatFloat(roots[0])),
 			keywordStyle.Render(fx.FormatFloat(roots[1])),
+		)
+	}
+
+	return fmt.Sprintf(
+		"%s\n\n%v",
+		m.TextInput.View(),
+		result,
+	)
+}
+
+func chaiView(m model) string {
+	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
+	m.TextInput.Placeholder = "ν α"
+
+	var result string
+
+	if len(arguments) == 2 {
+		var floatArgs []float64
+
+		for i := range arguments {
+			parsed, _ := strconv.ParseFloat(arguments[i], 64)
+			floatArgs = append(floatArgs, parsed)
+		}
+
+		critical := fx.ChiCritical(floatArgs[0], floatArgs[1])
+		result = fmt.Sprintf(
+			"The critical value is %v",
+			keywordStyle.Render(fx.FormatFloat(critical)),
 		)
 	}
 
