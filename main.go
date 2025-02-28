@@ -19,7 +19,8 @@ const (
 
 var (
 	keywordStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
-	subtleStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
+	subtleStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("242"))
+	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246"))
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	dotStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("236")).Render(dotChar)
 	mainStyle     = lipgloss.NewStyle().MarginLeft(2)
@@ -140,11 +141,12 @@ func choicesView(m model) string {
 
 	tpl := "Run what?\n\n"
 	tpl += "%s\n\n"
-	tpl += subtleStyle.Render("j/k, up/down: select") + dotStyle +
-		subtleStyle.Render("enter: choose") + dotStyle +
-		subtleStyle.Render("q, esc: quit")
 
-	choices := fmt.Sprintf(
+  splits := []string{help("↑ /k", "up"), help("↓ /j", "down"), help("q", "quit")}
+
+	tpl += strings.Join(splits, dotStyle)
+
+  choices := fmt.Sprintf(
 		"%s\n%s\n%s",
 		checkbox("Quadratic", c == 0),
 		checkbox("Poisson", c == 1),
@@ -156,8 +158,9 @@ func choicesView(m model) string {
 
 func quadraticView (m model) string {
 	arguments := strings.Split(m.TextInput.Value(), " ")
+  m.TextInput.Placeholder = "a, b, c"
 
-  var result [2]float64
+  var result string
 
   if len(arguments) == 3 {
     var coefficients []float64
@@ -167,7 +170,12 @@ func quadraticView (m model) string {
       coefficients = append(coefficients, parsed)
     }
 
-    result = fx.Quadratic(coefficients[0], coefficients[1], coefficients[2])
+    roots := fx.Quadratic(coefficients[0], coefficients[1], coefficients[2])
+    result = fmt.Sprintf(
+      "The roots are %v and %v",
+      keywordStyle.Render(fx.FormatFloat(roots[0])),
+      keywordStyle.Render(fx.FormatFloat(roots[1])),
+    )
   }
 
   return fmt.Sprintf(
@@ -175,6 +183,10 @@ func quadraticView (m model) string {
     m.TextInput.View(),
     result,
   )
+}
+
+func help(key string, label string) string {
+  return keyStyle.Render(key) + " " + subtleStyle.Render(label)
 }
 
 func checkbox(label string, checked bool) string {
