@@ -2,19 +2,19 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
-  "strings"
-  "strconv"
 
 	"fxtea/fx"
 
+	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/bubbles/textinput"
 )
 
 const (
-	dotChar           = " • "
+	dotChar = " • "
 )
 
 var (
@@ -27,9 +27,9 @@ var (
 )
 
 func main() {
-  ti := textinput.New()
-  ti.Focus()
-  ti.Width = 20
+	ti := textinput.New()
+	ti.Focus()
+	ti.Width = 20
 
 	initialModel := model{0, false, 10, false, ti}
 	p := tea.NewProgram(initialModel)
@@ -56,10 +56,10 @@ func frame() tea.Cmd {
 }
 
 type model struct {
-	Choice   int
-	Chosen   bool
-	Frames   int
-	Quitting bool
+	Choice    int
+	Chosen    bool
+	Frames    int
+	Quitting  bool
 	TextInput textinput.Model
 }
 
@@ -68,7 +68,7 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-  var cmd tea.Cmd
+	var cmd tea.Cmd
 
 	if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
@@ -82,8 +82,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return updateChoices(msg, m)
 	}
 
-  m.TextInput, cmd = m.TextInput.Update(msg)
-  return m, cmd
+	m.TextInput, cmd = m.TextInput.Update(msg)
+	return m, cmd
 }
 
 func (m model) View() string {
@@ -94,12 +94,12 @@ func (m model) View() string {
 	if !m.Chosen {
 		s = choicesView(m)
 	} else {
-	  switch m.Choice {
-	    case 0:
-        s = quadraticView(m)
-	    default:
-		    s = quadraticView(m)
-    }
+		switch m.Choice {
+		case 0:
+			s = quadraticView(m)
+		default:
+			s = quadraticView(m)
+		}
 	}
 	return mainStyle.Render("\n" + s + "\n\n")
 }
@@ -110,11 +110,11 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "j", "down":
 			if m.Choice < 2 {
-			  m.Choice++
+				m.Choice++
 			}
 		case "k", "up":
 			if m.Choice > 0 {
-			  m.Choice--
+				m.Choice--
 			}
 		case "enter":
 			m.Chosen = true
@@ -130,8 +130,7 @@ func updateChosen(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	case frameMsg:
 		m.Frames++
 		return m, frame()
-  }
-
+	}
 
 	return m, nil
 }
@@ -142,11 +141,11 @@ func choicesView(m model) string {
 	tpl := "Run what?\n\n"
 	tpl += "%s\n\n"
 
-  splits := []string{help("↑ /k", "up"), help("↓ /j", "down"), help("q", "quit")}
+	splits := []string{help("↑ /k", "up"), help("↓ /j", "down"), help("enter", "confirm"), help("q", "quit")}
 
 	tpl += strings.Join(splits, dotStyle)
 
-  choices := fmt.Sprintf(
+	choices := fmt.Sprintf(
 		"%s\n%s\n%s",
 		checkbox("Quadratic", c == 0),
 		checkbox("Poisson", c == 1),
@@ -156,37 +155,37 @@ func choicesView(m model) string {
 	return fmt.Sprintf(tpl, choices)
 }
 
-func quadraticView (m model) string {
+func quadraticView(m model) string {
 	arguments := strings.Split(m.TextInput.Value(), " ")
-  m.TextInput.Placeholder = "a b c"
+	m.TextInput.Placeholder = "a b c"
 
-  var result string
+	var result string
 
-  if len(arguments) == 3 {
-    var coefficients []float64
+	if len(arguments) == 3 {
+		var coefficients []float64
 
-    for i := range arguments {
-      parsed, _ := strconv.ParseFloat(arguments[i], 64)
-      coefficients = append(coefficients, parsed)
-    }
+		for i := range arguments {
+			parsed, _ := strconv.ParseFloat(arguments[i], 64)
+			coefficients = append(coefficients, parsed)
+		}
 
-    roots := fx.Quadratic(coefficients[0], coefficients[1], coefficients[2])
-    result = fmt.Sprintf(
-      "The roots are %v and %v",
-      keywordStyle.Render(fx.FormatFloat(roots[0])),
-      keywordStyle.Render(fx.FormatFloat(roots[1])),
-    )
-  }
+		roots := fx.Quadratic(coefficients[0], coefficients[1], coefficients[2])
+		result = fmt.Sprintf(
+			"The roots are %v and %v",
+			keywordStyle.Render(fx.FormatFloat(roots[0])),
+			keywordStyle.Render(fx.FormatFloat(roots[1])),
+		)
+	}
 
-  return fmt.Sprintf(
-    "%s\n\n%v",
-    m.TextInput.View(),
-    result,
-  )
+	return fmt.Sprintf(
+		"%s\n\n%v",
+		m.TextInput.View(),
+		result,
+	)
 }
 
 func help(key string, label string) string {
-  return keyStyle.Render(key) + " " + subtleStyle.Render(label)
+	return keyStyle.Render(key) + " " + subtleStyle.Render(label)
 }
 
 func checkbox(label string, checked bool) string {
