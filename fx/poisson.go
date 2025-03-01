@@ -10,7 +10,8 @@ func PoissonPD(lambda float64, x uint64) float64 {
 
 func PoissonCD(lambda float64, x uint64) float64 {
 	cumulative := 0.
-	for i := range x {
+  var i uint64;
+	for i = 0; i <= x; i++ {
 		cumulative += PoissonPD(lambda, i)
 	}
 	return cumulative
