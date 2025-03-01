@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	"fxtea/fx"
 
@@ -22,7 +21,8 @@ var (
 	subtleStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("242"))
 	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246")).Bold(true)
 	errorStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("203")).Italic(true)
-  infoStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("75"))
+  infoStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("81"))
+  titleStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("220")).Bold(true)
 	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212")).Bold(true).Padding(1).PaddingLeft(2)
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	codeStyle     = lipgloss.NewStyle().Background(lipgloss.Color("236")).PaddingLeft(1).PaddingRight(1)
@@ -35,40 +35,22 @@ func main() {
 	ti.Focus()
 	ti.Width = 20
 
-	initialModel := model{0, false, 10, false, ti}
+	initialModel := model{0, false, false, ti}
 	p := tea.NewProgram(initialModel)
 	if _, err := p.Run(); err != nil {
 		fmt.Println("could not start program:", err)
 	}
 }
 
-type (
-	tickMsg  struct{}
-	frameMsg struct{}
-)
-
-func tick() tea.Cmd {
-	return tea.Tick(time.Second, func(time.Time) tea.Msg {
-		return tickMsg{}
-	})
-}
-
-func frame() tea.Cmd {
-	return tea.Tick(time.Second/60, func(time.Time) tea.Msg {
-		return frameMsg{}
-	})
-}
-
 type model struct {
 	Choice    int
 	Chosen    bool
-	Frames    int
 	Quitting  bool
 	TextInput textinput.Model
 }
 
 func (m model) Init() tea.Cmd {
-	return tick()
+  return tea.EnterAltScreen
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -126,18 +108,7 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			m.Chosen = true
-			return m, frame()
 		}
-	}
-
-	return m, nil
-}
-
-func updateChosen(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
-	switch msg.(type) {
-	case frameMsg:
-		m.Frames++
-		return m, frame()
 	}
 
 	return m, nil
@@ -146,8 +117,9 @@ func updateChosen(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 func choicesView(m model) string {
 	c := m.Choice
 
-	tpl := "Run what?\n\n"
-	tpl += "%s\n\n"
+	tpl := titleStyle.Render("Welcome to ")
+  tpl += codeStyle.Render("fxtea")
+	tpl += "\n\n%s\n\n"
 
 	splits := []string{help("↑ /k", "up"), help("↓ /j", "down"), help("enter", "confirm"), help("q", "quit")}
 
@@ -265,7 +237,7 @@ func chaiView(m model) string {
 
 func header(s string, help []string) string {
   helpText := infoStyle.Render(s)
-  helpText += "\n\n%s"
+  helpText += "\n\n%s\n\n"
 	helpText += strings.Join(help, dotStyle)
 
   return helpText
