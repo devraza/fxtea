@@ -1,8 +1,9 @@
 package fx
 
 import (
-	"gonum.org/v1/gonum/stat/distuv"
 	"math"
+
+	"gonum.org/v1/gonum/stat/distuv"
 )
 
 func ChiSum(o float64, e float64) float64 {
