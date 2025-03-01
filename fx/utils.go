@@ -11,7 +11,7 @@ func Round(n, nearest float64) float64 {
 }
 
 func NaN(n float64) bool {
-  return math.IsNaN(n)
+	return math.IsNaN(n)
 }
 
 func FormatFloat(f float64) string {
