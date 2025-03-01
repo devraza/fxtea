@@ -141,7 +141,7 @@ func choicesView(m model) string {
 }
 
 func quadraticView(m model) string {
-	headerContent := fmt.Sprintf("Enter the values for a quadratic in the form %s", codeStyle.Render("x² + bx + c"))
+	headerContent := fmt.Sprintf("Enter the values for a quadratic in the form %s", codeStyle.Render("ax² + bx + c"))
 	helpText := header(headerContent, []string{help("q", "quit")})
 
 	arguments := strings.Split(m.TextInput.Value(), " ")
