@@ -10,6 +10,10 @@ func Round(n, nearest float64) float64 {
 	return math.Round(n/nearest) * nearest
 }
 
+func NaN(n float64) bool {
+  return math.IsNaN(n)
+}
+
 func FormatFloat(f float64) string {
 	s := fmt.Sprintf("%.4f", f)
 	return strings.TrimRight(strings.TrimRight(s, "0"), ".")

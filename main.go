@@ -21,6 +21,7 @@ var (
 	keywordStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
 	subtleStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("242"))
 	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246"))
+	errorStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("203")).Italic(true)
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	dotStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("236")).Render(dotChar)
 	mainStyle     = lipgloss.NewStyle().MarginLeft(2)
@@ -172,11 +173,21 @@ func quadraticView(m model) string {
 		}
 
 		roots := fx.Quadratic(coefficients[0], coefficients[1], coefficients[2])
-		result = fmt.Sprintf(
-			"The roots are %v and %v",
-			keywordStyle.Render(fx.FormatFloat(roots[0])),
-			keywordStyle.Render(fx.FormatFloat(roots[1])),
-		)
+
+    if fx.NaN(roots[0]) || fx.NaN(roots[1]) {
+      result = errorStyle.Render("The roots are complex")
+    } else if roots[0] != roots[1] {
+		  result = fmt.Sprintf(
+			  "The roots are %v and %v",
+			  keywordStyle.Render(fx.FormatFloat(roots[0])),
+			  keywordStyle.Render(fx.FormatFloat(roots[1])),
+		  )
+    } else {
+      result = fmt.Sprintf(
+			  "The root is %v",
+			  keywordStyle.Render(fx.FormatFloat(roots[0])),
+		  )
+    }
 	}
 
 	return fmt.Sprintf(
