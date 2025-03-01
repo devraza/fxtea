@@ -98,6 +98,8 @@ func (m model) View() string {
 		switch m.Choice {
 		case 0:
 			s = quadraticView(m)
+    case 1:
+      s = poissonView(m)
 		case 2:
 			s = chaiView(m)
 		default:
@@ -196,6 +198,30 @@ func quadraticView(m model) string {
 		result,
 	)
 }
+
+func poissonView(m model) string {
+	arguments := strings.Split(m.TextInput.Value(), " ")
+	m.TextInput.Placeholder = "λ x"
+
+	var result string
+
+	if len(arguments) == 2 {
+    lambda, _ := strconv.ParseFloat(arguments[0], 64)
+    x, _ := strconv.ParseUint(arguments[1], 10, 64)
+
+    result = fmt.Sprintf(
+      "The cumulative probability is: %s",
+			keywordStyle.Render(fmt.Sprintf("%.4f", fx.PoissonCD(lambda, x))),
+    )
+	}
+
+	return fmt.Sprintf(
+		"%s\n\n%v",
+		m.TextInput.View(),
+		result,
+	)
+}
+
 
 func chaiView(m model) string {
 	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
