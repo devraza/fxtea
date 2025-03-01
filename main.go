@@ -22,6 +22,7 @@ var (
 	subtleStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("242"))
 	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246"))
 	errorStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("203")).Italic(true)
+	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("2")).Bold(true).Padding(2).PaddingLeft(4)
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	dotStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("236")).Render(dotChar)
 	mainStyle     = lipgloss.NewStyle().MarginLeft(2)
@@ -90,7 +91,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	var s string
 	if m.Quitting {
-		return "\n  Quitting...\n"
+		return positiveStyle.Render("See you later!")
 	}
 	if !m.Chosen {
 		s = choicesView(m)
