@@ -36,7 +36,8 @@ func main() {
 	ti.Width = 20
 
 	initialModel := model{0, false, false, ti}
-	p := tea.NewProgram(initialModel)
+
+	p := tea.NewProgram(initialModel, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("could not start program:", err)
 	}
@@ -50,24 +51,28 @@ type model struct {
 }
 
 func (m model) Init() tea.Cmd {
-  return tea.EnterAltScreen
+  return nil
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
+  
+  if m.Quitting {
+    return m, tea.Quit
+  }
 
-	if msg, ok := msg.(tea.KeyMsg); ok {
+  if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
 		if k == "q" || k == "esc" || k == "ctrl+c" {
 			m.Quitting = true
-			return m, tea.Quit
+			return m, tea.ExitAltScreen
 		}
 	}
 
 	if !m.Chosen {
 		return updateChoices(msg, m)
 	}
-
+ 
 	m.TextInput, cmd = m.TextInput.Update(msg)
 	return m, cmd
 }
