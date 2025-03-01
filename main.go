@@ -20,10 +20,12 @@ const (
 var (
 	keywordStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
 	subtleStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("242"))
-	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246"))
+	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246")).Bold(true)
 	errorStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("203")).Italic(true)
-	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("2")).Bold(true).Padding(2).PaddingLeft(4)
+  infoStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("75"))
+	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212")).Bold(true).Padding(1).PaddingLeft(2)
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
+	codeStyle     = lipgloss.NewStyle().Background(lipgloss.Color("236")).PaddingLeft(1).PaddingRight(1)
 	dotStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("236")).Render(dotChar)
 	mainStyle     = lipgloss.NewStyle().MarginLeft(2)
 )
@@ -162,6 +164,9 @@ func choicesView(m model) string {
 }
 
 func quadraticView(m model) string {
+  headerContent := fmt.Sprintf("Enter the values for a quadratic in the form %s", codeStyle.Render("x² + bx + c"))
+  helpText := header(headerContent, []string{help("q", "quit")})
+
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "a b c"
 
@@ -193,14 +198,18 @@ func quadraticView(m model) string {
     }
 	}
 
-	return fmt.Sprintf(
+  content := fmt.Sprintf(
 		"%s\n\n%v",
 		m.TextInput.View(),
 		result,
 	)
+
+  return fmt.Sprintf(helpText, content)
 }
 
 func poissonView(m model) string {
+  helpText := header("Enter the rate and the value of x", []string{help("q", "quit")})
+
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "λ x"
 
@@ -216,15 +225,19 @@ func poissonView(m model) string {
     )
 	}
 
-	return fmt.Sprintf(
+  content := fmt.Sprintf(
 		"%s\n\n%v",
 		m.TextInput.View(),
 		result,
 	)
+
+  return fmt.Sprintf(helpText, content)
 }
 
 
 func chaiView(m model) string {
+  helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "quit")})
+ 
 	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
 	m.TextInput.Placeholder = "ν α"
 
@@ -245,11 +258,17 @@ func chaiView(m model) string {
 		)
 	}
 
-	return fmt.Sprintf(
-		"%s\n\n%v",
-		m.TextInput.View(),
-		result,
-	)
+  content := fmt.Sprintf("%s\n\n%v", m.TextInput.View(), result)
+
+  return fmt.Sprintf(helpText, content)
+}
+
+func header(s string, help []string) string {
+  helpText := infoStyle.Render(s)
+  helpText += "\n\n%s"
+	helpText += strings.Join(help, dotStyle)
+
+  return helpText
 }
 
 func help(key string, label string) string {
