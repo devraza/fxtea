@@ -67,6 +67,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Quitting = true
 			return m, tea.ExitAltScreen
 		}
+
+		if k == "backspace" && m.Chosen {
+			m.Chosen = false
+		}
 	}
 
 	if !m.Chosen {
@@ -142,7 +146,7 @@ func choicesView(m model) string {
 
 func quadraticView(m model) string {
 	headerContent := fmt.Sprintf("Enter the values for a quadratic in the form %s", codeStyle.Render("ax² + bx + c"))
-	helpText := header(headerContent, []string{help("q", "quit")})
+	helpText := header(headerContent, []string{help("q", "quit"), help("backspace", "go back")})
 
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "a b c"
@@ -185,7 +189,7 @@ func quadraticView(m model) string {
 }
 
 func poissonView(m model) string {
-	helpText := header("Enter the rate and the value of x", []string{help("q", "quit")})
+	helpText := header("Enter the rate and the value of x", []string{help("q", "quit"), help("backspace", "go back")})
 
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "λ x"
@@ -212,7 +216,7 @@ func poissonView(m model) string {
 }
 
 func chaiView(m model) string {
-	helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "quit")})
+	helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "quit"), help("backspace", "go back")})
 
 	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
 	m.TextInput.Placeholder = "ν α"
