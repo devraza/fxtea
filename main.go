@@ -30,12 +30,19 @@ var (
 	mainStyle     = lipgloss.NewStyle().MarginLeft(2)
 )
 
+// Choices
+const (
+	choiceQuadratic = iota
+	choicePoisson   = iota
+	choiceChi       = iota
+)
+
 func main() {
 	ti := textinput.New()
 	ti.Focus()
 	ti.Width = 20
 
-	initialModel := model{0, false, false, ti}
+	initialModel := model{choiceQuadratic, false, false, ti}
 
 	p := tea.NewProgram(initialModel, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
@@ -63,13 +70,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
-		if k == "q" || k == "esc" || k == "ctrl+c" {
+
+		if k == "q" && m.Chosen {
+			m.Chosen = false
+		} else if k == "q" || k == "esc" || k == "ctrl+c" {
 			m.Quitting = true
 			return m, tea.ExitAltScreen
-		}
-
-		if k == "backspace" && m.Chosen {
-			m.Chosen = false
 		}
 	}
 
@@ -90,12 +96,12 @@ func (m model) View() string {
 		s = choicesView(m)
 	} else {
 		switch m.Choice {
-		case 0:
+		case choiceQuadratic:
 			s = quadraticView(m)
-		case 1:
+		case choicePoisson:
 			s = poissonView(m)
-		case 2:
-			s = chaiView(m)
+		case choiceChi:
+			s = chiView(m)
 		default:
 			s = quadraticView(m)
 		}
@@ -136,9 +142,9 @@ func choicesView(m model) string {
 
 	choices := fmt.Sprintf(
 		"%s\n%s\n%s",
-		checkbox("Quadratic", c == 0),
-		checkbox("Poisson", c == 1),
-		checkbox("Chai", c == 2),
+		checkbox("Quadratic", c == choiceQuadratic),
+		checkbox("Poisson", c == choicePoisson),
+		checkbox("Chi-Squared", c == choiceChi),
 	)
 
 	return fmt.Sprintf(tpl, choices)
@@ -146,7 +152,7 @@ func choicesView(m model) string {
 
 func quadraticView(m model) string {
 	headerContent := fmt.Sprintf("Enter the values for a quadratic in the form %s", codeStyle.Render("ax² + bx + c"))
-	helpText := header(headerContent, []string{help("q", "quit"), help("backspace", "go back")})
+	helpText := header(headerContent, []string{help("q", "go back")})
 
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "a b c"
@@ -189,7 +195,7 @@ func quadraticView(m model) string {
 }
 
 func poissonView(m model) string {
-	helpText := header("Enter the rate and the value of x", []string{help("q", "quit"), help("backspace", "go back")})
+	helpText := header("Enter the rate and the value of x", []string{help("q", "go back")})
 
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "λ x"
@@ -215,8 +221,8 @@ func poissonView(m model) string {
 	return fmt.Sprintf(helpText, content)
 }
 
-func chaiView(m model) string {
-	helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "quit"), help("backspace", "go back")})
+func chiView(m model) string {
+	helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "go back")})
 
 	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
 	m.TextInput.Placeholder = "ν α"
