@@ -169,18 +169,16 @@ func quadraticView(m model) string {
 
 		roots := fx.Quadratic(coefficients[0], coefficients[1], coefficients[2])
 
-		if fx.NaN(roots[0]) || fx.NaN(roots[1]) {
-			result = errorStyle.Render("The roots are complex")
-		} else if roots[0] != roots[1] {
+		if roots[0] != roots[1] {
 			result = fmt.Sprintf(
 				"The roots are %v and %v",
-				keywordStyle.Render(fx.FormatFloat(roots[0])),
-				keywordStyle.Render(fx.FormatFloat(roots[1])),
+				keywordStyle.Render(roots[0]),
+				keywordStyle.Render(roots[1]),
 			)
 		} else {
 			result = fmt.Sprintf(
 				"The root is %v",
-				keywordStyle.Render(fx.FormatFloat(roots[0])),
+				keywordStyle.Render(roots[0]),
 			)
 		}
 	}
