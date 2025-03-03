@@ -195,7 +195,7 @@ func quadraticView(m model) string {
 }
 
 func poissonView(m model) string {
-	helpText := header("Enter the rate and the value of x", []string{help("q", "go back")})
+	helpText := header("Enter the rate and the value of x", []string{help("q", "return")})
 
 	arguments := strings.Split(m.TextInput.Value(), " ")
 	m.TextInput.Placeholder = "λ x"
@@ -222,7 +222,7 @@ func poissonView(m model) string {
 }
 
 func chiView(m model) string {
-	helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "go back")})
+	helpText := header("Enter the degrees of freedom and the significance level", []string{help("q", "return")})
 
 	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
 	m.TextInput.Placeholder = "ν α"
