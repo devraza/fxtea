@@ -144,7 +144,7 @@ func choicesView(m model) string {
 		"%s\n%s\n%s",
 		checkbox("Quadratic", c == choiceQuadratic),
 		checkbox("Poisson", c == choicePoisson),
-		checkbox("Chi-Squared", c == choiceChi),
+		checkbox("Chai", c == choiceChi),
 	)
 
 	return fmt.Sprintf(tpl, choices)
