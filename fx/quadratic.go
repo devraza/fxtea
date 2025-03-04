@@ -38,10 +38,10 @@ func Quadratic(a float64, b float64, c float64) []string {
 func complexQuadratic(a float64, b float64, c float64) [2]complex128 {
   roots := [2]complex128{complex(0, 0), complex(0, 0)}
 
-  discriminant := complex(b*b-4*a*c, 0)
+  discriminant := cmplx.Sqrt(complex(b*b-4*a*c, 0))
 
-  roots[0] = (-complex(b, 0) - cmplx.Sqrt(discriminant)) / complex(2*a, 0)
-  roots[1] = (-complex(b, 0) + cmplx.Sqrt(discriminant)) / complex(2*a, 0)
+  roots[0] = (-complex(b, 0) - discriminant) / complex(2*a, 0)
+  roots[1] = (-complex(b, 0) + discriminant) / complex(2*a, 0)
 
   return roots
 }
@@ -49,10 +49,10 @@ func complexQuadratic(a float64, b float64, c float64) [2]complex128 {
 func realQuadratic(a float64, b float64, c float64) [2]float64 {
 	roots := [2]float64{0., 0.}
 
-  discriminant := b*b-4*a*c
+  discriminant := math.Sqrt(b*b-4*a*c)
 
-	roots[0] = Round(-b-(math.Sqrt(discriminant))/(2*a), 0.0001)
-	roots[1] = Round(-b+(math.Sqrt(discriminant))/(2*a), 0.0001)
+	roots[0] = Round((-b-(discriminant))/(2*a), 0.0001)
+	roots[1] = Round((-b+(discriminant))/(2*a), 0.0001)
 
 	return roots
 }
