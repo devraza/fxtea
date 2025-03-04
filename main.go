@@ -24,7 +24,7 @@ var (
 	infoStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("81"))
 	resultStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("156"))
 	titleStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("220")).Bold(true)
-	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212")).Bold(true).Padding(1).PaddingLeft(2)
+	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212")).Bold(true).Margin(1).MarginLeft(2)
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	codeStyle     = lipgloss.NewStyle().Background(lipgloss.Color("237")).PaddingLeft(1).PaddingRight(1).Bold(true)
 	dotStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("236")).Render(dotChar)
