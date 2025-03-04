@@ -273,15 +273,29 @@ func binarySearchView(m model) string {
 		integerList = append(integerList, parsed)
 	}
 
+	integerList = fx.QuickSort(integerList)
+
 	result := fx.BinarySearch(integerList, query)
 
-	resultText := fmt.Sprintf(
-		"Element %v found at index %v",
-		keywordStyle.Render(strconv.FormatInt(query, 10)),
-		resultStyle.Render(strconv.FormatInt(result, 10)),
-	)
+	sortedText := ""
+	if len(integerList) > 0 {
+		sortedText = "The sorted list is "
+		for _, v := range integerList {
+			sortedText += infoStyle.Render(strconv.FormatInt(v, 10))
+			sortedText += " "
+		}
+	}
 
-	content := fmt.Sprintf("%s\n\n%s", m.TextInput.View(), resultText)
+	resultText := errorStyle.Render("The element is not in the list")
+	if result >= 0 {
+		resultText = fmt.Sprintf(
+			"Element %v found at index %v",
+			keywordStyle.Render(strconv.FormatInt(query, 10)),
+			resultStyle.Render(strconv.FormatInt(result, 10)),
+		)
+	}
+
+	content := fmt.Sprintf("%s\n\n%s\n\n%s", m.TextInput.View(), sortedText, resultText)
 
 	return fmt.Sprintf(helpText, content)
 }
