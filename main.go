@@ -37,7 +37,7 @@ const (
 	choicePoisson      = iota
 	choiceChi          = iota
 	choiceBinarySearch = iota
-	choiceLen          = iota // menu cant go past here
+	choiceLen          = iota // prevent the menu scrolling past this point
 )
 
 func main() {
