@@ -22,6 +22,7 @@ var (
 	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246")).Bold(true)
 	errorStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("203")).Italic(true)
 	infoStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("81"))
+	resultStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("156"))
 	titleStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("220")).Bold(true)
 	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212")).Bold(true).Padding(1).PaddingLeft(2)
 	checkboxStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
@@ -32,9 +33,11 @@ var (
 
 // Choices
 const (
-	choiceQuadratic = iota
-	choicePoisson   = iota
-	choiceChi       = iota
+	choiceQuadratic    = iota
+	choicePoisson      = iota
+	choiceChi          = iota
+	choiceBinarySearch = iota
+	choiceLen          = iota // menu cant go past here
 )
 
 func main() {
@@ -102,6 +105,8 @@ func (m model) View() string {
 			s = poissonView(m)
 		case choiceChi:
 			s = chiView(m)
+		case choiceBinarySearch:
+			s = binarySearchView(m)
 		default:
 			s = quadraticView(m)
 		}
@@ -114,7 +119,7 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "j", "down":
-			if m.Choice < 2 {
+			if m.Choice < choiceLen-1 {
 				m.Choice++
 			}
 		case "k", "up":
@@ -141,10 +146,11 @@ func choicesView(m model) string {
 	tpl += strings.Join(splits, dotStyle)
 
 	choices := fmt.Sprintf(
-		"%s\n%s\n%s",
+		"%s\n%s\n%s\n%s",
 		checkbox("Quadratic", c == choiceQuadratic),
 		checkbox("Poisson", c == choicePoisson),
 		checkbox("Chai", c == choiceChi),
+		checkbox("Binary Search", c == choiceBinarySearch),
 	)
 
 	return fmt.Sprintf(tpl, choices)
@@ -243,6 +249,39 @@ func chiView(m model) string {
 	}
 
 	content := fmt.Sprintf("%s\n\n%v", m.TextInput.View(), result)
+
+	return fmt.Sprintf(helpText, content)
+}
+
+func binarySearchView(m model) string {
+	headerText := fmt.Sprintf(
+		"%s %s",
+		"Enter the query in the format",
+		codeStyle.Render("<query> <list>"),
+	)
+	helpText := header(headerText, []string{help("q", "return")})
+
+	arguments := strings.Split(strings.TrimSpace(m.TextInput.Value()), " ")
+	m.TextInput.Placeholder = "3 1 2 3 4 5"
+
+	query, _ := strconv.ParseInt(arguments[0], 10, 64)
+
+	var integerList []int64
+
+	for _, v := range arguments[1:] {
+		parsed, _ := strconv.ParseInt(v, 10, 64)
+		integerList = append(integerList, parsed)
+	}
+
+	result := fx.BinarySearch(integerList, query)
+
+	resultText := fmt.Sprintf(
+		"Element %v found at index %v",
+		keywordStyle.Render(strconv.FormatInt(query, 10)),
+		resultStyle.Render(strconv.FormatInt(result, 10)),
+	)
+
+	content := fmt.Sprintf("%s\n\n%s", m.TextInput.View(), resultText)
 
 	return fmt.Sprintf(helpText, content)
 }
