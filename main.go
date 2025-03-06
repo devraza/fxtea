@@ -91,7 +91,7 @@ func (m model) View() string {
 		case choiceFibonacci:
 			s = fibonacciView(m)
 		default:
-			s = quadraticView(m)
+			s = choicesView(m)
 		}
 	}
 	return mainStyle.Render("\n" + s + "\n\n")
