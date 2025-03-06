@@ -37,6 +37,7 @@ const (
 	choicePoisson      = iota
 	choiceChi          = iota
 	choiceBinarySearch = iota
+  choiceFibonacci    = iota
 	choiceLen          = iota // prevent the menu scrolling past this point
 )
 
@@ -107,6 +108,8 @@ func (m model) View() string {
 			s = chiView(m)
 		case choiceBinarySearch:
 			s = binarySearchView(m)
+    case choiceFibonacci:
+      s = fibonacciView(m) 
 		default:
 			s = quadraticView(m)
 		}
@@ -146,11 +149,12 @@ func choicesView(m model) string {
 	tpl += strings.Join(splits, dotStyle)
 
 	choices := fmt.Sprintf(
-		"%s\n%s\n%s\n%s",
+		"%s\n%s\n%s\n%s\n%s",
 		checkbox("Quadratic", c == choiceQuadratic),
 		checkbox("Poisson", c == choicePoisson),
 		checkbox("Chai", c == choiceChi),
 		checkbox("Binary Search", c == choiceBinarySearch),
+		checkbox("Fibonacci", c == choiceFibonacci),
 	)
 
 	return fmt.Sprintf(tpl, choices)
@@ -252,6 +256,21 @@ func chiView(m model) string {
 
 	return fmt.Sprintf(helpText, content)
 }
+
+func fibonacciView(m model) string {
+	helpText := header("Enter the length of the generated sequence", []string{help("q", "return")})
+
+	m.TextInput.Placeholder = "n"
+
+  parsed, _ := strconv.ParseUint(m.TextInput.Value(), 10, 64)
+
+	sequence := fx.Fibonacci(parsed)
+
+	content := fmt.Sprintf("%s\n\n%v", m.TextInput.View(), sequence)
+
+	return fmt.Sprintf(helpText, content)
+}
+
 
 func binarySearchView(m model) string {
 	headerText := fmt.Sprintf(
