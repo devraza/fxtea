@@ -22,6 +22,7 @@ var (
 	keyStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("246")).Bold(true)
 	errorStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("203")).Italic(true)
 	infoStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("81"))
+	listStyle     = lipgloss.NewStyle().Bold(true)
 	resultStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("156"))
 	titleStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("220")).Bold(true)
 	positiveStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("212")).Bold(true).Margin(1).MarginLeft(2)
@@ -267,10 +268,14 @@ func fibonacciView(m model) string {
 	m.TextInput.Placeholder = "n"
 
   parsed, _ := strconv.ParseUint(m.TextInput.Value(), 10, 64)
-
 	sequence := fx.Fibonacci(parsed)
 
-	content := fmt.Sprintf("%s\n\n%v", m.TextInput.View(), sequence)
+  formattedSequence := ""
+  for _, v := range sequence {
+    formattedSequence += listStyle.Render(strconv.FormatUint(v, 10)) + " "
+  }
+
+	content := fmt.Sprintf("%s\n\n%s", m.TextInput.View(), formattedSequence)
 
 	return fmt.Sprintf(helpText, content)
 }
@@ -304,8 +309,7 @@ func binarySearchView(m model) string {
 	if len(integerList) > 0 {
 		sortedText = "The sorted list is "
 		for _, v := range integerList {
-			sortedText += infoStyle.Render(strconv.FormatInt(v, 10))
-			sortedText += " "
+			sortedText += listStyle.Render(strconv.FormatInt(v, 10)) + " "
 		}
 	}
 
