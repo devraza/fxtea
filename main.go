@@ -122,13 +122,17 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "j", "down":
-			if m.Choice < choiceLen-1 {
-				m.Choice++
-			}
+			if m.Choice == choiceLen-1 {
+				m.Choice = 0
+			} else {
+        m.Choice++
+      }
 		case "k", "up":
-			if m.Choice > 0 {
-				m.Choice--
-			}
+			if m.Choice == 0 {
+				m.Choice = choiceLen-1
+			} else {
+        m.Choice--
+      }
 		case "enter":
 			m.Chosen = true
 		}
