@@ -24,7 +24,6 @@ const (
 
 func main() {
 	ti := textinput.New()
-	ti.Focus()
 	ti.Width = 20
 
 	initialModel := model{choiceQuadratic, false, false, ti}
@@ -116,6 +115,8 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			m.Chosen = true
+      m.TextInput.SetValue("")
+      m.TextInput.Focus()
 		}
 	}
 
