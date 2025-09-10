@@ -1,4 +1,4 @@
-package main
+package fx
 
 import (
 	"fmt"
