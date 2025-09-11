@@ -83,7 +83,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	var s string
 	if m.Quitting {
-		return positiveStyle.Render("See you later!")
+		return positiveStyle.Render("See you later!\n")
 	}
 	if !m.Chosen {
 		s = choicesView(m)
