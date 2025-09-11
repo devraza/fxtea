@@ -222,7 +222,7 @@ func pmccView(m model) string {
 		}
 	}
 
-	content := fmt.Sprintf("> %s\n\n%s\n\n%s", m.TextInput.Value(), resultText, pmccTable.View())
+	content := fmt.Sprintf("%s\n\n%s\n\n%s", m.TextInput.View(), resultText, pmccTable.View())
 
 	return fmt.Sprintf(helpText, content)
 }
