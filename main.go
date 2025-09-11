@@ -19,6 +19,7 @@ const (
 	choiceChi          = iota
 	choiceBinarySearch = iota
 	choiceFibonacci    = iota
+	choicePMCC         = iota
 	choiceLen          = iota // prevent the menu scrolling past this point
 )
 
@@ -26,7 +27,7 @@ func main() {
 	ti := textinput.New()
 	ti.Width = 20
 
-	initialModel := model{choiceQuadratic, false, false, ti}
+	initialModel := model{choiceQuadratic, false, false, ti, ""}
 
 	p := tea.NewProgram(initialModel, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
@@ -39,6 +40,7 @@ type model struct {
 	Chosen    bool
 	Quitting  bool
 	TextInput textinput.Model
+	PMCCData  string
 }
 
 func (m model) Init() tea.Cmd {
@@ -60,10 +62,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else if k == "q" || k == "esc" || k == "ctrl+c" {
 			m.Quitting = true
 			return m, tea.ExitAltScreen
+		} 
+
+		if k == "enter" && m.Choice == choicePMCC {
+			m.PMCCData += m.TextInput.Value()
+			m.PMCCData += "\n"
+			m.TextInput.Reset()
 		}
 	}
 
 	if !m.Chosen {
+		m.PMCCData = ""
 		return updateChoices(msg, m)
 	}
 
@@ -90,6 +99,8 @@ func (m model) View() string {
 			s = binarySearchView(m)
 		case choiceFibonacci:
 			s = fibonacciView(m)
+		case choicePMCC:
+			s = pmccView(m)
 		default:
 			s = choicesView(m)
 		}
@@ -115,8 +126,8 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			m.Chosen = true
-      m.TextInput.SetValue("")
-      m.TextInput.Focus()
+	        m.TextInput.SetValue("")
+            m.TextInput.Focus()
 		}
 	}
 
@@ -135,12 +146,13 @@ func choicesView(m model) string {
 	tpl += strings.Join(splits, dotStyle)
 
 	choices := fmt.Sprintf(
-		"%s\n%s\n%s\n%s\n%s",
+		"%s\n%s\n%s\n%s\n%s\n%s",
 		checkbox("Quadratic", c == choiceQuadratic),
 		checkbox("Poisson", c == choicePoisson),
 		checkbox("Chai", c == choiceChi),
 		checkbox("Binary Search", c == choiceBinarySearch),
 		checkbox("Fibonacci", c == choiceFibonacci),
+		checkbox("PMCC", c == choicePMCC),
 	)
 
 	return fmt.Sprintf(tpl, choices)

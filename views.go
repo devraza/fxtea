@@ -5,6 +5,7 @@ import (
 	"fxtea/fx"
 	"strconv"
 	"strings"
+	"github.com/charmbracelet/bubbles/table"
 )
 
 func quadraticView(m model) string {
@@ -164,6 +165,64 @@ func binarySearchView(m model) string {
 	}
 
 	content := fmt.Sprintf("%s\n\n%s\n\n%s", m.TextInput.View(), sortedText, resultText)
+
+	return fmt.Sprintf(helpText, content)
+}
+
+func pmccView(m model) string {
+	headerText := fmt.Sprintf(
+		"%s %s",
+		"Add rows to the table in the format",
+		codeStyle.Render("<x> <y>"),
+	)
+	helpText := header(headerText, []string{help("enter", "add row to table"), help("q", "return")})
+
+	pmccColumns := []table.Column{
+		{Title: "x", Width: 10},
+		{Title: "y", Width: 10},
+	}
+
+	pmccTable := table.New(
+		table.WithColumns(pmccColumns),
+		table.WithFocused(false),
+		table.WithHeight(10),
+	)
+	pmccTable.SetStyles(table.DefaultStyles())
+
+	pmccTable.FromValues(m.PMCCData, " ")
+
+	var resultText string
+	rows_str := strings.Split(m.PMCCData, "\n")
+	if len(rows_str) < 3 {
+		resultText = "Enter the data first"
+	} else {
+		var x, y []float64
+		var err error
+
+		for _, row := range rows_str {
+			values := strings.Split(row, " ")
+			if len(values) < 2 {
+				break
+			}
+			var valX, valY float64
+			valX, err = strconv.ParseFloat(values[0], 64)
+			valY, err = strconv.ParseFloat(values[1], 64)
+			if err == nil {
+				x = append(x, valX)
+				y = append(y, valY)
+			}
+		}
+		
+		r, err := fx.PMCC(x, y)
+
+		if err != nil {
+			resultText = fmt.Sprintf("ERR: %s", err)
+		} else {
+			resultText = fmt.Sprintf("r = %.4f", r)
+		}
+	}
+
+	content := fmt.Sprintf("> %s\n\n%s\n\n%s", m.TextInput.Value(), resultText, pmccTable.View())
 
 	return fmt.Sprintf(helpText, content)
 }
