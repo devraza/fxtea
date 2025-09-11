@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"fxtea/fx"
+	"github.com/charmbracelet/bubbles/table"
 	"strconv"
 	"strings"
-	"github.com/charmbracelet/bubbles/table"
 )
 
 func quadraticView(m model) string {
@@ -212,7 +212,7 @@ func pmccView(m model) string {
 				y = append(y, valY)
 			}
 		}
-		
+
 		r, err := fx.PMCC(x, y)
 
 		if err != nil {

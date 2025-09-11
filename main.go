@@ -62,7 +62,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else if k == "q" || k == "esc" || k == "ctrl+c" {
 			m.Quitting = true
 			return m, tea.ExitAltScreen
-		} 
+		}
 
 		if k == "enter" && m.Choice == choicePMCC {
 			m.PMCCData += m.TextInput.Value()
@@ -126,8 +126,8 @@ func updateChoices(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			m.Chosen = true
-	        m.TextInput.SetValue("")
-            m.TextInput.Focus()
+			m.TextInput.SetValue("")
+			m.TextInput.Focus()
 		}
 	}
 
