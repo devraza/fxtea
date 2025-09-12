@@ -189,7 +189,12 @@ func pmccView(m model) string {
 		table.WithFocused(false),
 		table.WithHeight(10),
 	)
-	pmccTable.SetStyles(table.DefaultStyles())
+
+	style := table.DefaultStyles()
+	style.Header = tableHeaderStyle
+	style.Selected = tableSelectedStyle
+
+	pmccTable.SetStyles(style)
 
 	pmccTable.FromValues(m.PMCCData, " ")
 
