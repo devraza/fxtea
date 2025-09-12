@@ -170,11 +170,7 @@ func binarySearchView(m model) string {
 }
 
 func pmccView(m model) string {
-	headerText := fmt.Sprintf(
-		"%s %s",
-		"Add rows to the table",
-		codeStyle.Render("<x> <y>"),
-	)
+	headerText := "Add rows to the table"
 	helpText := header(headerText, []string{help("enter", "add row to table"), help("q", "return")})
 
 	pmccColumns := []table.Column{
