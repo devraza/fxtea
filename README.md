@@ -5,4 +5,4 @@ An advanced calculator extended from [devraza](https://git.devraza.giize.com/dev
 Available as a TUI, GUI, and CLI.
 
 ## License
-See [LICENSE](./LICENSE) for the BSD 3-clause license that governs this project.
+See [LICENSE](./LICENSE) for the Mozilla Public License 2.0 that governs this project.
