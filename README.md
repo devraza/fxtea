@@ -2,6 +2,10 @@
 An advanced calculator extended from [devraza](https://git.devraza.giize.com/devraza)'s
 [A-Level utilities](https://git.devraza.giize.com/devraza/omniputation).
 
+<p align="center">
+  <img src="./assets/banner.png" alt="fxtea banner"/>
+</p>
+
 Available as a TUI, GUI, and CLI.
 
 ## License
