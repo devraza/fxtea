@@ -216,6 +216,8 @@ func pmccView(m model) string {
 			}
 		}
 
+		d, err := fx.Tail()
+
 		r, err := fx.PMCC(x, y)
 
 		if err != nil {
