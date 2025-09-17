@@ -30,7 +30,7 @@ func PMCC(x []float64, y []float64) (float64, error) {
 	for idx := range x {
 		valX := x[idx] - meanX
 		valY := y[idx] - meanY
-	
+
 		top += valX * valY
 		botParts[0] += math.Pow(valX, 2)
 		botParts[1] += math.Pow(valY, 2)

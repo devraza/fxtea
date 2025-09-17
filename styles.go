@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/bubbles/table"
+	"github.com/charmbracelet/lipgloss"
 )
 
 var (
@@ -20,6 +20,6 @@ var (
 	dotStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("236")).Render(dotChar)
 	mainStyle     = lipgloss.NewStyle().MarginLeft(2)
 
-	tableHeaderStyle = table.DefaultStyles().Header.BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240")).BorderBottom(true).Bold(true)
+	tableHeaderStyle   = table.DefaultStyles().Header.BorderStyle(lipgloss.NormalBorder()).BorderForeground(lipgloss.Color("240")).BorderBottom(true).Bold(true)
 	tableSelectedStyle = lipgloss.NewStyle().Foreground(lipgloss.NoColor{})
 )
