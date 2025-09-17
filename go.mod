@@ -1,4 +1,4 @@
-module fxtea
+module github.com/devraza/fxtea
 
 go 1.23.3
 
