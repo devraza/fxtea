@@ -200,7 +200,6 @@ func pmccView(m model) string {
 		resultText = "Enter the data first"
 	} else {
 		var x, y []float64
-		var err error
 
 		for _, row := range rows_str {
 			values := strings.Split(row, " ")
@@ -208,12 +207,11 @@ func pmccView(m model) string {
 				break
 			}
 			var valX, valY float64
-			valX, err = strconv.ParseFloat(values[0], 64)
-			valY, err = strconv.ParseFloat(values[1], 64)
-			if err == nil {
-				x = append(x, valX)
-				y = append(y, valY)
-			}
+			valX, _ = strconv.ParseFloat(values[0], 64)
+			valY, _ = strconv.ParseFloat(values[1], 64)
+
+			x = append(x, valX)
+			y = append(y, valY)
 		}
 
 		r, err := fx.PMCC(x, y)
